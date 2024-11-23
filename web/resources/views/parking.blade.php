@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             #map {
                 height: 50rem;
@@ -63,27 +64,60 @@
                     <!-- map of location -->
                     <div class=" p-6 text-gray-900 dark:text-gray-100">
                         <div id="map" style="height: 400px;"></div>
-
+                        
                         <script>
                             var map = L.map('map').setView([{{ $parking->lat }}, {{ $parking->lng }}], 16);
-
+                            
                             L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={{ env("MAPBOX_API") }}', {
                                 maxZoom: 19,
                                 tileSize: 512,
                                 zoomOffset: -1,
                                 attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                             }).addTo(map);
-
+                            
                             L.marker([{{ $parking->lat }}, {{ $parking->lng }}]).addTo(map)
-                                .bindPopup('{{ $parking->name }}')
+                            .bindPopup('{{ $parking->name }}')
                                 .openPopup();
                         </script>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                    
                     <!-- print % of full as BIG Number -->
+                    <div class="p-6 text-gray-900 dark:text-gray-100 flex items-center justify-center h-full">
+                        <div class="relative">
+                            <canvas id="parkingChart" class="w-full h-full"></canvas>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-semibold text-black dark:text-white">{{ $parking->occupied * 100 / $parking->capacity }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById('parkingChart').getContext('2d');
+                        var parkingChart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: [{{ $parking->occupied }}, {{ $parking->capacity - $parking->occupied }}],
+                                    backgroundColor: ['#3b82f6', '#e5e7eb'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                cutout: '70%',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                    </div>
 
-                    <h2 class="text-6xl font-semibold text-black dark:text-white">{{ $parking->occupied * 100 / $parking->capacity }}%</h2>
+
 
                 </div>
             </div>
