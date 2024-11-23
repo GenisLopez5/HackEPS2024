@@ -1,3 +1,5 @@
+# Gets executed every day at 00:01
+
 import pandas as pd
 from predict import train, predict
 from datetime import datetime, timedelta
