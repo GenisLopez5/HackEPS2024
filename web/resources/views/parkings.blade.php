@@ -9,31 +9,47 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Search nearest parking button -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-4">
-                <div class="p-6">
-                    <button onclick="findNearestParking()" 
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Find Nearest Available Parking
-                    </button>
-                    <span id="locationStatus" class="ml-4 text-gray-600 dark:text-gray-400"></span>
-                </div>
-            </div>
+                
+                
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100 text-2xl">
+                        {{ __("Parking List") }}
+                        <div class="text-base">
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100 text-2xl">
-                    {{ __("Parking List") }}
+                            <button onclick="findNearestParking()" 
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            
+                            <i class="fa-solid fa-location-arrow"></i>
+                            
+                            Find Nearest Available Parking
+                        </button>
+                        <span id="locationStatus" class="ml-4 text-gray-600 dark:text-gray-400"></span>
+                    </div>
+                    </div>
                 </div>
             </div>
 
             <div id="parkingList">
                 @foreach($parkings as $parking)
-                <a href="{{ route('parking', $parking->id) }}" class="no-underline">
+                <a href="{{ route('parking', $parking->id) }}" class="no-underline" id="{{ $parking->id }}" data-occupied="{{ $parking->occupied_percentage }}" data-lat="{{ $parking->lat }}" data-lng="{{ $parking->lng }}">
+                    
                     <div class="parking-info bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-4 mt-4"
                          data-lat="{{ $parking->latitude }}" 
                          data-lng="{{ $parking->longitude }}"
                          data-id="{{ $parking->id }}">
                         <h2 class="text-2xl font-semibold mb-2 text-black dark:text-white">
-                            {{ $parking->name }} ({{ $parking->occupied_percentage }}% full)
-                            <span class="distance-info text-sm text-gray-600 dark:text-gray-400"></span>
+                            <!-- if occupied != 100 print FREE in gree -->
+                            @if($parking->occupied_percentage != 100)
+                                <span class="text-green-500">FREE</span>
+                                @else 
+                                <span class="text-red-500">FULL</span>
+                            @endif
+
+                            {{ $parking->name }} 
+                            <span class="occupied_percentage">
+                                ({{ $parking->occupied_percentage }}% occupied)
+                            </span>
+                                <span class="distance-info text-sm text-gray-600 dark:text-gray-400"></span>
                         </h2>
                         <p class="text-lg text-black dark:text-white">{{ $parking->address }}</p>
                         <p class="text-lg text-black dark:text-white">
@@ -58,8 +74,10 @@
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
+                    // const userLat = position.coords.latitude;
+                    const userLat = 41.608183387096865;
+                    // const userLng = position.coords.longitude;
+                    const userLng = 0.6234979539189234;
                     sortParkingByDistance(userLat, userLng);
                     statusElement.textContent = 'Locations sorted by distance';
                 },
@@ -83,41 +101,53 @@
         }
 
         function sortParkingByDistance(userLat, userLng) {
+            debugger;
             const parkingList = document.getElementById('parkingList');
-            const parkings = Array.from(parkingList.children);
-
-            // Calculate distances and store with original elements
-            const parkingsWithDistances = parkings.map(parking => {
-                const parkingElement = parking.querySelector('.parking-info');
-                const lat = parseFloat(parkingElement.dataset.lat);
-                const lng = parseFloat(parkingElement.dataset.lng);
-                const distance = calculateDistance(userLat, userLng, lat, lng);
-                
-                // Display distance in the parking card
-                const distanceInfo = parkingElement.querySelector('.distance-info');
-                distanceInfo.textContent = ` (${distance.toFixed(1)} km away)`;
-
-                return {
-                    element: parking,
-                    distance: distance
-                };
+            const parkingsWithDistances = [];
+            const filledParkings = [];
+            // Calculate distance for each parking
+            parkingList.childNodes.forEach(item => {
+                if (item.nodeName === 'A') {
+                    const parkingLat = parseFloat(item.dataset.lat);
+                    const parkingLng = parseFloat(item.dataset.lng);
+                    const distance = calculateDistance(userLat, userLng, parkingLat, parkingLng); // Distance in km
+                    if(item.dataset.occupied == 100){
+                        filledParkings.push({
+                            element: item,
+                            distance: distance
+                        });
+                    } else {
+                        parkingsWithDistances.push({
+                            element: item,
+                            distance: distance
+                       });
+                    }
+                }
             });
 
-            // Sort by distance and available spots
+            // Sort by distance
             parkingsWithDistances.sort((a, b) => {
-                const availableA = parseInt(a.element.querySelector('.parking-info').textContent.match(/Available Spots: (\d+)/)[1]);
-                const availableB = parseInt(b.element.querySelector('.parking-info').textContent.match(/Available Spots: (\d+)/)[1]);
-                
-                // Prioritize available spots, then distance
-                if (availableA === 0 && availableB > 0) return 1;
-                if (availableB === 0 && availableA > 0) return -1;
                 return a.distance - b.distance;
             });
 
+
+            // append filled parkings to the end of the list
             // Reorder elements
             parkingsWithDistances.forEach(item => {
                 parkingList.appendChild(item.element);
+                // for each parking, print the distance
+                const distanceInfo = item.element.querySelector('.distance-info');
+                distanceInfo.textContent = `(${item.distance.toFixed(2)} km)`;
+
+                // 
             });
+            if(filledParkings.length > 0){
+                filledParkings.forEach(item => {
+                    parkingList.appendChild(item.element);
+                });
+            }
+            
         }
+        
     </script>
 </x-app-layout>

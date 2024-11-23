@@ -25,6 +25,8 @@ Route::get('/parking/map', [CotxesController::class, 'mapIndex'])->name('map.ind
 Route::redirect('/', '/parking');
 Route::get('/parking', [CotxesController::class, 'index'])->name('parkings');
 
+Route::get('/recalc', [CotxesController::class, 'createHardcodedParking']);
+
 Route::get('/parking/{pkid}', [CotxesController::class, 'getOneParking'])->name('parking');
 
 Route::get('/dashboard', function () {

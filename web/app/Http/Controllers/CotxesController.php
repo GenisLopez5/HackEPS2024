@@ -83,7 +83,7 @@ class CotxesController extends Controller
     $parking->state = 'Catalunya';
     $parking->zip = '25001';
     $parking->capacity = 10;
-    $parking->occupied = 0;
+    $parking->occupied = 10;
     $parking->lat = 41.60685567656295;
     $parking->lng = 0.6256165340329318;
     $parking->save();
