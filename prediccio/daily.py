@@ -23,18 +23,20 @@ month_today = current_time.month,
 day_today = current_time.day,
 today_predictions = predict(model, month_today, day_today)
 
+# Save today's predictions to CSV
+today_for_plotting = pd.DataFrame({
+    'month': [month_today] * 24,
+    'day': [day_today] * 24,
+    'hour': range(24),
+    'predicted_occupation': today_predictions
+})
+today_for_plotting.to_csv('today_predictions.csv', index=False)
+
 # Generate predictions for tomorrow
 tomorrow_time = current_time + timedelta(days=1)
 month_tomorrow = current_time.month,
 day_tomorrow = current_time.day,
 tomorrow_predictions = predict(model, month_tomorrow, day_tomorrow)
-
-# Save today's predictions to CSV
-today_for_plotting = pd.DataFrame({
-    'hour': range(24),
-    'predicted_occupation': today_predictions
-})
-today_for_plotting.to_csv('today_predictions.csv', index=False)
 
 # Save tomorrow's predictions to CSV
 tomorrow_for_plotting = pd.DataFrame({
