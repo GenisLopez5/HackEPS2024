@@ -15,7 +15,4 @@ new_data = {
     'occupation': float(sys.argv[1])
 }
 
-# Append new row
-daily_database = pd.read_csv('daily_data.csv')
-daily_database = pd.concat([daily_database, pd.DataFrame([new_data])], ignore_index=True)
-daily_database.to_csv('daily_data.csv', index=False)
+print(new_data)

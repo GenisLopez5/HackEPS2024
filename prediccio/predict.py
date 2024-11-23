@@ -30,17 +30,3 @@ def predict(model, month, day):
     y_predict = model.predict(x_predict)
     
     return y_predict
-
-def daily_prediction(model, daily_sample):
-
-    month = daily_sample['month'].iloc[0]
-    day = daily_sample['day'].iloc[0]
-
-    predictions = predict(model, month, day)
-
-    for _, row in daily_sample.iterrows():
-        hour = row['hour']
-        occupation = row['occupation']
-        predictions[hour] = occupation
-    
-    return predictions
