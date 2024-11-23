@@ -31,7 +31,7 @@ def predict(model, month, day):
     
     return y_predict
 
-def create_daily_prediction(model, daily_sample):
+def daily_prediction(model, daily_sample):
 
     month = daily_sample['month'].iloc[0]
     day = daily_sample['day'].iloc[0]
