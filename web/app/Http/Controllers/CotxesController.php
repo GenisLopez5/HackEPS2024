@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class CotxesController extends Controller
 {
+
+    public function index(){
+        $parkings = Parking::all();
+        // create a new value that is % of occupancy
+        foreach ($parkings as $parking) {
+            $parking->occupancy_percentage = $parking->occupancy / $parking->capacity * 100;
+        }
+        // order them by occupancy rate min to max
+        $parkings = $parkings->sortBy('occupancy_percentage');
+        return view('parkings', compact('parkings'));
+    }
  
     public function getOneParking($pkid){
         $parking = Parking::find($pkid);
