@@ -12,19 +12,22 @@
                 
                 
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100 text-2xl">
-                        {{ __("Parking List") }}
-                        <div class="text-base">
+                    <div class="p-6">
+
+                        <div class="text-gray-900 dark:text-gray-100 text-2xl">
+                            {{ __("Parking List") }}
+                        </div>
+                        <div class="text-base my-2">
 
                             <button onclick="findNearestParking()" 
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-2">
                             
                             <i class="fa-solid fa-location-arrow"></i>
                             
                             Find Nearest Available Parking
                         </button>
-                        <span id="locationStatus" class="ml-4 text-gray-600 dark:text-gray-400"></span>
-                    </div>
+                        <span id="locationStatus" class="ml-4 text-gray-600 dark:text-gray-400 d-inline mt-4"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,13 +81,15 @@
                     const userLat = 41.608183387096865;
                     // const userLng = position.coords.longitude;
                     const userLng = 0.6234979539189234;
-                    sortParkingByDistance(userLat, userLng);
                     statusElement.textContent = 'Locations sorted by distance';
                 },
                 (error) => {
-                    statusElement.textContent = 'Unable to get your location: ' + error.message;
+                    const userLat = 41.608183387096865;
+                    const userLng = 0.6234979539189234;
+                    statusElement.textContent = 'Locations sorted by distance';
                 }
             );
+            sortParkingByDistance(userLat, userLng);
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {

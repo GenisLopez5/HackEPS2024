@@ -41,7 +41,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Parking List') }}
+            {{ __("Parking Map") }}
         </h2>
     </x-slot>
 
@@ -49,18 +49,18 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <!-- <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 text-2xl">
                     {{ __("Parking Map") }}
                 </div>
-            </div>
+            </div> -->
             
             <div id="map"></div>
             
             <!-- generate mapbox map and render all parkings -->
             <script>
-                var map = L.map('map').setView([41.6166658, 0.6042285], 13);
-                // var map = L.map('map').setView([{{ $parkings[0]->lat }} , {{ $parkings[0]->lng }}], 13);
+                var map = L.map('map').setView([41.6152682123882, 0.6214800949316924], 15);
+                // var map = L.map('map').setView([{{ $parkings[0]->lat }} 4 {{ $parkings[0]->lng }}], 13);
                 L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={{ env("MAPBOX_API") }}', {
                                 maxZoom: 19,
                                 tileSize: 512,
