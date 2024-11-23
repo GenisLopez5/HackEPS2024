@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/cotxes/enter', 'CotxesController@enter');
+Route::post('/cotxes/exit', 'CotxesController@exit');
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
