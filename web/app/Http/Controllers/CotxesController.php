@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class CotxesController extends Controller
 {
+
+    public function index(){
+        $parkings = Parking::all();
+        // create a new value that is % of occupied
+        foreach ($parkings as $parking) {
+            $parking->occupied_percentage = $parking->occupied / $parking->capacity * 100;
+        }
+        // order them by occupied rate min to max
+        $parkings = $parkings->sortBy('occupied_percentage');
+        return view('parkings', compact('parkings'));
+    }
  
     public function getOneParking($pkid){
         $parking = Parking::find($pkid);
@@ -16,15 +27,18 @@ class CotxesController extends Controller
         }
         return view('parking', compact('parking'));
     }
-    // increment parking occupancy if there is space
+    // increment parking occupied if there is space
     
     public function enter(Request $request){
         $parkingId = $request->input('parking_id');
         $parking = Parking::find($parkingId);
-        if ($parking->occupancy < $parking->capacity) {
-            $parking->occupancy++;
+        if(!$parking){
+            return response()->json(['success' => false, 'message' => 'Parking not found'], 404);
+        }
+        if ($parking->occupied < $parking->capacity) {
+            $parking->occupied++;
             $parking->save();
-            return response()->json(['success' => false, 'message' => 'Car entered successfully']);
+            return response()->json(['success' => true, 'message' => 'Car entered successfully']);
         } else {
             return response()->json(['success' => false, 'message' => 'Parking is full']);
         }
@@ -33,10 +47,13 @@ class CotxesController extends Controller
     public function exit(Request $request){
         $parkingId = $request->input('parking_id');
         $parking = Parking::find($parkingId);
-        if ($parking->occupancy > 0) {
-            $parking->occupancy--;
+        if(!$parking){
+            return response()->json(['success' => false, 'message' => 'Parking not found'], 404);
+        }
+        if ($parking->occupied > 0) {
+            $parking->occupied--;
             $parking->save();
-            return response()->json(['success' => false, 'message' => 'Car exited successfully']);
+            return response()->json(['success' => true, 'message' => 'Car exited successfully']);
         } else {
             return response()->json(['success' => false, 'message' => 'Parking is empty']);
         }

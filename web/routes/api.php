@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CotxesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/cotxes/enter', 'CotxesController@enter');
-Route::post('/cotxes/exit', 'CotxesController@exit');
+Route::post('/cotxes/enter', [CotxesController::class, 'enter']);
+Route::post('/cotxes/exit', [CotxesController::class, 'exit']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
