@@ -15,13 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/parking/{pkid}', [CotxesController::class, 'getOneParking'])->name('parking');
 
+
+// alias of /
+Route::redirect('/', '/parking');
+
 Route::get('/parking', [CotxesController::class, 'index']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
