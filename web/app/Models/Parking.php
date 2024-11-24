@@ -20,4 +20,9 @@ class Parking extends Model
         'capacity',
         'occupied',
     ];
+
+    public function historicalParkings()
+    {
+        return $this->hasMany(HistoricalParking::class);
+    }
 }

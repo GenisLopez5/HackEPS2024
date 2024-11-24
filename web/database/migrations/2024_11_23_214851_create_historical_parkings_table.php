@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parking_id')->constrained();
             $table->integer('occupied');
-            $table->integer('capacity');
-            
             $table->timestamps();
         });
     }

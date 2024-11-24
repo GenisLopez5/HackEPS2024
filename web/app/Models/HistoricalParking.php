@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class HistoricalParking extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['parking_id', 'occupied'];
+    
+    public function parking()
+    {
+        return $this->belongsTo(Parking::class);
+    }
 }
