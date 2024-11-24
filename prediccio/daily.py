@@ -1,4 +1,7 @@
 # Gets executed every day at 00:01
+# Adds yesterday's csv to historical csv
+# Sets today's csv to empty
+# Creates csv files with predictions for today and tomorrow
 
 import pandas as pd
 from predict import train, predict

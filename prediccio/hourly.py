@@ -1,5 +1,7 @@
 # Usage: python3 hourly.py <occupation>
-# Gets executed 2 minutes past __:00
+# Gets executed each hour at __:02
+# Adds a new row to daily csv
+# Updates daily predictions with observed data
 
 import pandas as pd
 import sys
