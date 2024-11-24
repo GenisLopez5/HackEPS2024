@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Femtolink API Documentation',
+                'title' => 'AparcApp API',
             ],
 
             'routes' => [

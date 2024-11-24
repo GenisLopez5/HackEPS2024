@@ -5,69 +5,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/parkings": {
-            "get": {
-                "tags": [
-                    "Parkings"
-                ],
-                "summary": "Get all parkings",
-                "operationId": "d6d0650edeb80cc4c18398f285bcb998",
-                "responses": {
-                    "200": {
-                        "description": "List of all parkings with occupation percentage"
-                    }
-                }
-            }
-        },
-        "/map": {
-            "get": {
-                "tags": [
-                    "Parkings"
-                ],
-                "summary": "Get parkings for map view",
-                "operationId": "16a1a0d4411c68b384ca6e0dd1217212",
-                "responses": {
-                    "200": {
-                        "description": "List of parkings for map visualization"
-                    }
-                }
-            }
-        },
-        "/parking/{pkid}": {
-            "get": {
-                "tags": [
-                    "Parkings"
-                ],
-                "summary": "Get specific parking details",
-                "operationId": "a9e07edcf3abb6cd2009590731307ec6",
-                "parameters": [
-                    {
-                        "name": "pkid",
-                        "in": "path",
-                        "description": "Parking ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Detailed parking information including predictions and historical data"
-                    },
-                    "404": {
-                        "description": "Parking not found"
-                    }
-                }
-            }
-        },
-        "/enter": {
+        "/api/cotxes/enter": {
             "post": {
                 "tags": [
-                    "Parkings"
+                    "Cotxes"
                 ],
                 "summary": "Register car entry to parking",
-                "operationId": "07a653f6e86011f886ecd9ae54d772ef",
+                "operationId": "da050df0f80f5c6165332a757d91d413",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -98,13 +42,13 @@
                 }
             }
         },
-        "/exit": {
+        "/api/cotxes/exit": {
             "post": {
                 "tags": [
-                    "Parkings"
+                    "Cotxes"
                 ],
                 "summary": "Register car exit from parking",
-                "operationId": "fdbdc187c17c5a9b8cd581ded13ce237",
+                "operationId": "a8c646044912148d21c59c7e2f32556b",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -134,12 +78,231 @@
                     }
                 }
             }
+        },
+        "/api/parking": {
+            "get": {
+                "tags": [
+                    "Parking"
+                ],
+                "summary": "Get all parking slots",
+                "operationId": "b3391eae36b6cead87e9fda88d54a22b",
+                "responses": {
+                    "200": {
+                        "description": "List of all parking slots"
+                    },
+                    "404": {
+                        "description": "No parking slots found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Parking"
+                ],
+                "summary": "Create new parking slot",
+                "operationId": "0d1fe2cf8c0968cca739560fe512159d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "address",
+                                    "city",
+                                    "state",
+                                    "zip",
+                                    "lat",
+                                    "lng",
+                                    "capacity",
+                                    "occupied"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "zip": {
+                                        "type": "string"
+                                    },
+                                    "lat": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "lng": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "capacity": {
+                                        "type": "integer"
+                                    },
+                                    "occupied": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Parking slot created successfully"
+                    },
+                    "400": {
+                        "description": "Missing parameters"
+                    }
+                }
+            }
+        },
+        "/api/parking/one": {
+            "get": {
+                "tags": [
+                    "Parking"
+                ],
+                "summary": "Get specific parking slot",
+                "operationId": "7fa5bf26b5b470ddb2c80dbc9efb8b97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Parking slot ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Parking slot details"
+                    },
+                    "400": {
+                        "description": "Missing parameters"
+                    }
+                }
+            }
+        },
+        "/api/parking/{id}": {
+            "put": {
+                "tags": [
+                    "Parking"
+                ],
+                "summary": "Update parking slot",
+                "operationId": "48a211465c1510e9cdcadb69da07be98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Parking slot ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "address",
+                                    "city",
+                                    "state",
+                                    "zip",
+                                    "lat",
+                                    "lng",
+                                    "capacity",
+                                    "occupied"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "zip": {
+                                        "type": "string"
+                                    },
+                                    "lat": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "lng": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "capacity": {
+                                        "type": "integer"
+                                    },
+                                    "occupied": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Parking slot updated successfully"
+                    },
+                    "400": {
+                        "description": "Missing parameters"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Parking"
+                ],
+                "summary": "Delete parking slot",
+                "operationId": "e25ea176ea354b45c5da1b20c3d0a6fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Parking slot ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Parking slot deleted successfully"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
-            "name": "Parkings",
-            "description": "Parking management endpoints"
+            "name": "Parking",
+            "description": "Operations about parking"
+        },
+        {
+            "name": "Cotxes",
+            "description": "Cotxes management endpoints"
         }
     ]
 }
