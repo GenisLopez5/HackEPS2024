@@ -1,10 +1,116 @@
 <?php
 
 namespace App\Http\Controllers;
+/**
+ * @OA\Info(
+ *     title="Parking Management API",
+ *     version="1.0.0",
+ *     description="API for managing parking lots in Lleida"
+ * )
+ */
+
+/**
+ * @OA\Tag(
+ *     name="Parkings",
+ *     description="Parking management endpoints"
+ * )
+ * 
+ * @OA\Get(
+ *     path="/parkings",
+ *     summary="Get all parkings",
+ *     tags={"Parkings"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of all parkings with occupation percentage"
+ *     )
+ * )
+ * 
+ * @OA\Get(
+ *     path="/map",
+ *     summary="Get parkings for map view",
+ *     tags={"Parkings"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of parkings for map visualization"
+ *     )
+ * )
+ * 
+ * @OA\Get(
+ *     path="/parking/{pkid}",
+ *     summary="Get specific parking details",
+ *     tags={"Parkings"},
+ *     @OA\Parameter(
+ *         name="pkid",
+ *         in="path",
+ *         required=true,
+ *         description="Parking ID",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Detailed parking information including predictions and historical data"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Parking not found"
+ *     )
+ * )
+ * 
+ * @OA\Post(
+ *     path="/enter",
+ *     summary="Register car entry to parking",
+ *     tags={"Parkings"},
+ *     @OA\RequestBody(
+ *         @OA\JsonContent(
+ *             required={"parking_id"},
+ *             @OA\Property(property="parking_id", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Car entered successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Parking not found"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Parking is full"
+ *     )
+ * )
+ * 
+ * @OA\Post(
+ *     path="/exit",
+ *     summary="Register car exit from parking",
+ *     tags={"Parkings"},
+ *     @OA\RequestBody(
+ *         @OA\JsonContent(
+ *             required={"parking_id"},
+ *             @OA\Property(property="parking_id", type="integer")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Car exited successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Parking not found"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Parking is empty"
+ *     )
+ * )
+ */
+
 
 use App\Models\Parking;
 use Illuminate\Http\Request;
 
+
+//
 class CotxesController extends Controller
 {
     private function getParkings(){

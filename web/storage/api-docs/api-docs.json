@@ -1,0 +1,145 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AparcApp API Documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/parkings": {
+            "get": {
+                "tags": [
+                    "Parkings"
+                ],
+                "summary": "Get all parkings",
+                "operationId": "d6d0650edeb80cc4c18398f285bcb998",
+                "responses": {
+                    "200": {
+                        "description": "List of all parkings with occupation percentage"
+                    }
+                }
+            }
+        },
+        "/map": {
+            "get": {
+                "tags": [
+                    "Parkings"
+                ],
+                "summary": "Get parkings for map view",
+                "operationId": "16a1a0d4411c68b384ca6e0dd1217212",
+                "responses": {
+                    "200": {
+                        "description": "List of parkings for map visualization"
+                    }
+                }
+            }
+        },
+        "/parking/{pkid}": {
+            "get": {
+                "tags": [
+                    "Parkings"
+                ],
+                "summary": "Get specific parking details",
+                "operationId": "a9e07edcf3abb6cd2009590731307ec6",
+                "parameters": [
+                    {
+                        "name": "pkid",
+                        "in": "path",
+                        "description": "Parking ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed parking information including predictions and historical data"
+                    },
+                    "404": {
+                        "description": "Parking not found"
+                    }
+                }
+            }
+        },
+        "/enter": {
+            "post": {
+                "tags": [
+                    "Parkings"
+                ],
+                "summary": "Register car entry to parking",
+                "operationId": "07a653f6e86011f886ecd9ae54d772ef",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "parking_id"
+                                ],
+                                "properties": {
+                                    "parking_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car entered successfully"
+                    },
+                    "404": {
+                        "description": "Parking not found"
+                    },
+                    "400": {
+                        "description": "Parking is full"
+                    }
+                }
+            }
+        },
+        "/exit": {
+            "post": {
+                "tags": [
+                    "Parkings"
+                ],
+                "summary": "Register car exit from parking",
+                "operationId": "fdbdc187c17c5a9b8cd581ded13ce237",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "parking_id"
+                                ],
+                                "properties": {
+                                    "parking_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car exited successfully"
+                    },
+                    "404": {
+                        "description": "Parking not found"
+                    },
+                    "400": {
+                        "description": "Parking is empty"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Parkings",
+            "description": "Parking management endpoints"
+        }
+    ]
+}
