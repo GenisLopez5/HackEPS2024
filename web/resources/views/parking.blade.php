@@ -142,9 +142,9 @@
                                     }]
                                 },
                                 options: {
-                                    
                                     responsive: true,
-                                    maintainAspectRatio: false,
+                                    maintainAspectRatio: true,
+                                    aspectRatio: 2,
                                     plugins: {
                                         legend: {
                                             display: false
@@ -188,6 +188,102 @@
                         </script>
                 </div>
             </div>
+            <div class="flex flex-wrap gap-4 flex-col md:flex-row">
+                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                    <!-- plot historical data -->
+                     <!-- x-axis - time -->
+                     <!-- y axis - occupancy -->
+                    <!-- use pagination to go through pages of data -->
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <canvas id="lineChart" class="w-full h-full"></canvas>
+                        <script>
+                            // Define pagination variables
+                            const itemsPerPage = 24; // Show 24 hours of data per page
+                            let currentPage = 0;
+                            let historicData = {
+                                times: {!! json_encode(collect($parking->historic_data)->pluck('time')) !!},
+                                occupied: {!! json_encode(collect($parking->historic_data)->pluck('occupied')) !!}
+                            };
+
+                            function updateChart() {
+                                const startIndex = currentPage * itemsPerPage;
+                                const endIndex = startIndex + itemsPerPage;
+                                
+                                var ctx = document.getElementById('lineChart').getContext('2d');
+                                if (window.lineChart instanceof Chart) {
+                                    window.lineChart.destroy();
+                                }
+                                
+                                window.lineChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: historicData.times.slice(startIndex, endIndex),
+                                        datasets: [{
+                                            label: 'Occupancy',
+                                            data: historicData.occupied.slice(startIndex, endIndex),
+                                            borderColor: '#3b82f6',
+                                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                            borderWidth: 2
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: true,
+                                        aspectRatio: 2,
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Historical Data',
+                                                color: '#D1D5DB'
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                grid: { color: '#374151' },
+                                                ticks: { color: '#D1D5DB' }
+                                            },
+                                            y: {
+                                                grid: { color: '#374151' },
+                                                ticks: { color: '#D1D5DB' }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+                            // Add pagination controls
+                            document.write(`
+                                <div class="flex justify-center gap-4 mt-4">
+                                    <button onclick="previousPage()" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
+                                    <button onclick="nextPage()" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+                                </div>
+                            `);
+
+                            function previousPage() {
+                                if (currentPage > 0) {
+                                    currentPage--;
+                                    updateChart();
+                                }
+                            }
+
+                            function nextPage() {
+                                if ((currentPage + 1) * itemsPerPage < historicData.times.length) {
+                                    currentPage++;
+                                    updateChart();
+                                }
+                            }
+
+                            // Initial chart render
+                            updateChart();
+
+                            
+                    
+                        </script>
+
+                    
 
             </div>
         </div>

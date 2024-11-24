@@ -48,12 +48,22 @@ class CotxesController extends Controller
         
         // only get the last column
         $parking->predictions = array_column($parking->predictions, 3);
-
-
         
-        // dd($parking->predictions);
-
-
+        
+        
+        
+        // get historical data
+        $csv2File = base_path('/DataAnalysis/CSVs/' . $parking->id . '_historic_data.csv');
+        $csv2 = array_map('str_getcsv', file($csv2File));
+        $parking->historic_data = array_slice($csv2, 1);
+        // convert 0,month,day,hour,occupation
+        // to ['time'] =  and ['occupied'] = 
+        $parking->historic_data = array_map(function($item){
+            return ['time' => $item[1] . '-' . $item[2] . ' ' . $item[3] . ':00', 'occupied' => $item[4]];
+        }, $parking->historic_data);
+        
+        
+        
         $parking->occupied_percentage = $parking->occupied * 100 / $parking->capacity ;
 
         return view('parking', compact('parking'));
