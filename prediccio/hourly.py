@@ -8,12 +8,17 @@ Updates daily predictions with observed data
 import pandas as pd
 import sys
 from datetime import datetime
+from daily import calc_daily
+import os
+
+# Get current timestamp
+current_time = datetime.now()
 
 daily_data_path = sys.argv[1] + '_daily_data.csv'
 today_predictions_data_path = sys.argv[1] + '_today_predictions.csv'
 
-# Get current timestamp
-current_time = datetime.now()
+if (current_time.hour < 1 or not os.path.exists(daily_data_path)):
+    calc_daily(sys.argv[1])
 
 # Create data for new row
 new_data = {
