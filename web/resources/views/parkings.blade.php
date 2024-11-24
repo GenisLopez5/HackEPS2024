@@ -50,7 +50,7 @@
 
                             {{ $parking->name }} 
                             <span class="occupied_percentage">
-                                ({{ $parking->occupied_percentage }}% occupied)
+                                ({{ floor($parking->occupied_percentage) }}% occupied)
                             </span>
                                 <span class="distance-info text-sm text-gray-600 dark:text-gray-400"></span>
                         </h2>
@@ -82,14 +82,15 @@
                     // const userLng = position.coords.longitude;
                     const userLng = 0.6234979539189234;
                     statusElement.textContent = 'Locations sorted by distance';
+                    sortParkingByDistance(userLat, userLng);
                 },
                 (error) => {
                     const userLat = 41.608183387096865;
                     const userLng = 0.6234979539189234;
                     statusElement.textContent = 'Locations sorted by distance';
+                    sortParkingByDistance(userLat, userLng);
                 }
             );
-            sortParkingByDistance(userLat, userLng);
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
