@@ -13,10 +13,10 @@ def calc_daily(parkingID):
 
     """
 
-    historic_data_path = './CSVs/' + parkingID + '_historic_data.csv'
-    daily_data_path = './CSVs/' + parkingID + '_daily_data.csv'
-    today_predictions_data_path = './CSVs/' + parkingID + '_today_predictions.csv'
-    tomorrow_predictions_data_path = './CSVs/' + parkingID + '_tomorrow_predictions.csv'
+    historic_data_path = './DataAnalysis/CSVs/' + parkingID + '_historic_data.csv'
+    daily_data_path = './DataAnalysis/CSVs/' + parkingID + '_daily_data.csv'
+    today_predictions_data_path = './DataAnalysis/CSVs/' + parkingID + '_today_predictions.csv'
+    tomorrow_predictions_data_path = './DataAnalysis/CSVs/' + parkingID + '_tomorrow_predictions.csv'
 
     # Load CSVs from current directory
     try:
@@ -61,7 +61,7 @@ def calc_daily(parkingID):
         })
         today_for_plotting.to_csv(today_predictions_data_path, index=False)
         print('Exiting')
-        sys.exit()
+        return
 
 
 

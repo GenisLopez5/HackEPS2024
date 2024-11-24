@@ -32,10 +32,13 @@ class CotxesController extends Controller
  
     public function getOneParking($pkid){
         $parking = Parking::find($pkid);
-        // if parking is not found, return 404
+        // if parking is not found, return 404        
         if (!$parking) {
             return response()->json(['success' => false, 'message' => 'Parking not found'], 404);
         }
+
+        $parking->occupied_percentage = $parking->occupied * 100 / $parking->capacity ;
+
         return view('parking', compact('parking'));
     }
     // increment parking occupied if there is space

@@ -14,8 +14,8 @@ import os
 # Get current timestamp
 current_time = datetime.now()
 
-daily_data_path = './CSVs/' + sys.argv[1] + '_daily_data.csv'
-today_predictions_data_path = './CSVs/' + sys.argv[1] + '_today_predictions.csv'
+daily_data_path = './DataAnalysis/CSVs/' + sys.argv[1] + '_daily_data.csv'
+today_predictions_data_path = './DataAnalysis/CSVs/' + sys.argv[1] + '_today_predictions.csv'
 
 if (current_time.hour < 1 or not os.path.exists(daily_data_path)):
     calc_daily(sys.argv[1])

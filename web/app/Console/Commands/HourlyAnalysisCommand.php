@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Parking;
 use Illuminate\Console\Command;
 
 class HourlyAnalysisCommand extends Command
@@ -26,6 +27,7 @@ class HourlyAnalysisCommand extends Command
 
             // Construct the shell command to call the Python script
             $pythonScript = base_path('DataAnalysis/hourly.py');
+
             $command = "python3 {$pythonScript} {$parameter1} {$parameter2}";
 
             // Execute the command
