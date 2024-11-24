@@ -24,7 +24,7 @@ namespace App\Http\Controllers;
  * )
  * 
  * @OA\Get(
- *     path="/api/parking/one",
+ *     path="/api/parking/{id}",
  *     summary="Get specific parking slot",
  *     tags={"Parking"},
  *     @OA\Parameter(

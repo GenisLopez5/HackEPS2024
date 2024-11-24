@@ -163,13 +163,13 @@
                 }
             }
         },
-        "/api/parking/one": {
+        "/api/parking/{id}": {
             "get": {
                 "tags": [
                     "Parking"
                 ],
                 "summary": "Get specific parking slot",
-                "operationId": "7fa5bf26b5b470ddb2c80dbc9efb8b97",
+                "operationId": "a6a0cd57d1951af76c6534cec6635909",
                 "parameters": [
                     {
                         "name": "id",
@@ -189,9 +189,7 @@
                         "description": "Missing parameters"
                     }
                 }
-            }
-        },
-        "/api/parking/{id}": {
+            },
             "put": {
                 "tags": [
                     "Parking"
