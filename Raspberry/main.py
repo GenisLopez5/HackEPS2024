@@ -39,9 +39,11 @@ def Update():
             try:
                 ret = None
                 if (sensor_enter_mode):
-                    ret = requests.post(CAR_ENTER_URL, data={"parking_id": PARKING_ID}, json=None)
+                    ret = requests.post(CAR_ENTER_URL, 
+                                        data={"parking_id": PARKING_ID}, json=None)
                 else:
-                    ret = requests.post(CAR_EXIT_URL, data={"parking_id": PARKING_ID}, json=None)
+                    ret = requests.post(CAR_EXIT_URL, 
+                                        data={"parking_id": PARKING_ID}, json=None)
 
                 ret = json.loads(ret.text)
                 
