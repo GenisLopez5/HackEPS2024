@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::post('/cotxes/enter', [CotxesController::class, 'enter']);
 Route::post('/cotxes/exit', [CotxesController::class, 'exit']);
 
