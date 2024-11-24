@@ -52,15 +52,23 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 text-2xl">
-                    <h2 class="text-2xl font-semibold text-black dark:text-white">{{ $parking->name }} ({{ $parking->occupied * 100 / $parking->capacity }}% full)</h2>
+                    <h2 class="text-2xl font-semibold text-black dark:text-white">
+                            @if($parking->occupied_percentage != 100)
+                                <span class="text-green-500">FREE</span>
+                                @else 
+                                <span class="text-red-500">FULL</span>
+                            @endif
+                        {{ $parking->name }} ({{ $parking->occupied }}/{{ $parking->capacity }} occupied)</h2>
                     <p class="text-lg text-black dark:text-white">{{ $parking->address }}</p>
                 </div>
             </div>
 
             <!-- <p class="text-lg text-black dark:text-white">Available Spots: {{ $parking->capacity - $parking->occupied }}/{{ $parking->capacity }}</p> -->
-            <div class="flex gap-4">
-
-                <div class="w-full md:w-1/2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
+           
+            <div class="flex flex-wrap gap-4 flex-col md:flex-row">
+                
+                
+                <div class="flex-1 px-4 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
                     <!-- map of location -->
                     <div class=" p-6 text-gray-900 dark:text-gray-100">
                         <div id="map" style="height: 400px;"></div>
@@ -81,45 +89,101 @@
                         </script>
                     </div>
                 </div>
-                <div class="w-full md:w-1/2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
                     
                     <!-- print % of full as BIG Number -->
                     <div class="p-6 text-gray-900 dark:text-gray-100 flex items-center justify-center h-full">
                         <div class="relative">
                             <canvas id="parkingChart" class="w-full h-full"></canvas>
                             <div class="absolute inset-0 flex items-center justify-center">
-                                <span class="text-2xl font-semibold text-black dark:text-white">{{ $parking->occupied * 100 / $parking->capacity }}%</span>
+                                <span class="text-2xl font-semibold text-black dark:text-white">{{ floor($parking->occupied_percentage) }}%</span>
                             </div>
                         </div>
                     </div>
                     <script>
-                        var ctx = document.getElementById('parkingChart').getContext('2d');
-                        var parkingChart = new Chart(ctx, {
-                            type: 'doughnut',
-                            data: {
-                                datasets: [{
-                                    data: [{{ $parking->occupied }}, {{ $parking->capacity - $parking->occupied }}],
-                                    backgroundColor: ['#3b82f6', '#e5e7eb'],
-                                    borderWidth: 0
-                                }]
-                            },
-                            options: {
-                                cutout: '70%',
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        display: false
-                                    }
+                    var ctx = document.getElementById('parkingChart').getContext('2d');
+                    var parkingChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [{{ $parking->occupied }}, {{ $parking->capacity - $parking->occupied }}],
+                                backgroundColor: ['#3b82f6', '#e5e7eb'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            cutout: '70%',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
                                 }
                             }
-                        });
+                        }
+                    });
                     </script>
-                    </div>
-
-
-
+                
                 </div>
+            </div>
+            <div class="flex flex-wrap gap-4 flex-col md:flex-row">
+                <div class="flex-1 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <canvas id="barChart" class="w-full h-full"></canvas>
+                        <script>
+                            var ctx = document.getElementById('barChart').getContext('2d');
+                            var barChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+                                    datasets: [{
+                                        label: 'Predicted Occupancy',
+                                        data: [{{ implode(',', $parking->predictions) }}],
+                                        backgroundColor: '#3b82f6'
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            grid: {
+                                                color: '#374151'
+                                            },
+                                            ticks: {
+                                                color: '#D1D5DB'
+                                            }
+                                        },
+                                        y: {
+                                            grid: {
+                                                color: '#374151'
+                                            },
+                                            ticks: {
+                                                color: '#D1D5DB'
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        // Get current hour
+                        const currentHour = new Date().getHours();
+
+                        // Update background colors based on current hour
+                        barChart.data.datasets[0].backgroundColor = barChart.data.labels.map((label, index) => {
+                            return index <= currentHour ? '#ef4444' : '#3b82f6';
+                        });
+
+                        // Update the chart
+                        barChart.update();
+                        </script>
+                </div>
+            </div>
+
             </div>
         </div>
     </div>

@@ -2,9 +2,12 @@
 <x-slot:extraScripts>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
         <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
         <style>
             #map {
                 height: 50rem;
@@ -89,6 +92,16 @@
                     blur: 45,
                     maxZoom: 22,
                 }).addTo(map);
+
+                // create a button to toggle the heat map layer
+                var heatButton = L.easyButton('fa-fire', function(btn, map){
+                    if(map.hasLayer(heat)){
+                        map.removeLayer(heat);
+                    } else {
+                        map.addLayer(heat);
+                    }
+                }, 'Toggle Heat Map').addTo(map);
+                
             </script>
 
         </div>

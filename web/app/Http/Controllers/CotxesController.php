@@ -37,6 +37,23 @@ class CotxesController extends Controller
             return response()->json(['success' => false, 'message' => 'Parking not found'], 404);
         }
 
+        // get the propper data of ./dataAnalysis/CSVs/X_today_predictions.csv
+        $csvFile = base_path('/DataAnalysis/CSVs/' . $parking->id . '_today_predictions.csv');
+        // map the csv file to an array
+        
+        $csv = array_map('str_getcsv', file($csvFile));
+        
+        
+        $parking->predictions = array_slice($csv, 1);
+        
+        // only get the last column
+        $parking->predictions = array_column($parking->predictions, 3);
+
+
+        
+        // dd($parking->predictions);
+
+
         $parking->occupied_percentage = $parking->occupied * 100 / $parking->capacity ;
 
         return view('parking', compact('parking'));
