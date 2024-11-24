@@ -54,7 +54,7 @@ First of all, we need to run the solver in order to compile its results into a r
 
 To do that, we'll need to create a virtualenviroment and install all the requirements
 ```
-cd ./solver
+cd ./web/DataAnalysis
 ```
 ```
 virtualenv env --python=python3.10
@@ -65,30 +65,17 @@ source env/bin/activate
 ```
 pip install -r requirements.txt
 ```
-Once created, we'll run the solver once and then, enable the FlaskAPI service to allow access to the json computed file (that contains all events in the correct order) to the backend (Laravel).
-```
-python3 solver.py
-```
-Now, run the FlaskAPI service:
-```
-cd ./web_server
-```
-```
-python3 app.py
-```
 
-Once having the FlaskAPI service up, we'll need to enable the backend service (Laravel) with PHP 8.3.6
+Once having this up, we'll need to enable the backend service (Laravel) with PHP 8.3.6
 ```
-cd ../../web
+cd ..
 ```
 ```
 composer install
 ```
 Once installed all dependencies, now we can create a ``.env`` file by copying the `.env.example` and configuring all the standard credentials (we'll only need to set up the [database section if needed](https://www.inmotionhosting.com/support/edu/laravel/how-to-configure-the-laravel-env-for-a-database/), by default uses Sqlite3) 
 
-Don't forget to add the DATA_URI credential with the value of the host of the FlaskAPI e.g. ``DATA_URI="http://127.0.0.1:5000/"`` if running in the same machine on port 5000.
-
-If using in different devices, use [ngrok](https://ngrok.com/). (We used it for the demo)
+If using in different devices, a LAN (preferably a hotspot). (We used it for the demo)
 
 ```
 php artisan migrate
@@ -98,7 +85,7 @@ php artisan serve
 ```
 In another terminal, we'll launch the frontend active CSS compiling service using tailwindcss, (for development purposes)
 ```
-cd .. && npm install
+npm install
 ```
 To recompile every time any file gets changed: 
 ```
@@ -111,6 +98,12 @@ npm run build
 Now, you're ready to go and all services are up!
 
 You can enjoy the responsive web-app at 127.0.0.1:8000 (probably), or see the ``php artisan serve`` section and check which port is running on.
+
+And last but not least, we'll need to run the python script that will generate the predictions and the json file that will be used by the frontend to display the data. (Use crontab to execute hourly)
+
+```
+php artisan call:hourly-analysis
+```
 
 
 <a name="learning"></a>

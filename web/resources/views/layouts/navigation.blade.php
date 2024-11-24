@@ -85,9 +85,25 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('parkings')" :active="request()->routeIs('parkings')">
-                {{ __('parkings') }}
-            </x-responsive-nav-link>
+        @if (request()->RouteIs('parking'))
+                        <!-- back -->
+                        <a href="{{ route('parkings') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-blue-500 dark:border-blue-300 text-sm font-medium leading-5 text-gray-900 dark:text-gray-200 focus:outline-none focus:border-blue-700 transition duration-150 ease-in-out">
+                            <!-- arrow svg -->
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <!-- back text -->
+                            <span class="ml-2">Back</span>
+                        </a>
+                    @else 
+
+                    <x-responsive-nav-link :href="route('parkings')" :active="request()->routeIs('parkings')">
+                    <i class="fa-solid fa-list mr-2"></i>
+                    {{ __(' Parking List') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('map.index')" :active="request()->routeIs('map.index')">
+                    <i class="fa-solid fa-map mr-2"></i>
+                    {{ __('Parking Map') }}
+                    </x-responsive-nav-link>
+                    @endif
         @auth
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
