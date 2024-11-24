@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+        <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
         <style>
             #map {
                 height: 50rem;
@@ -69,11 +70,25 @@
                             }).addTo(map);
                 @foreach($parkings as $parking)
                 L.marker([{{ $parking->lat }}, {{ $parking->lng }}]).addTo(map)
-                    .bindPopup('<a href="{{ route("parking", $parking->id) }}" class="no-underline"><h2 class="text-2xl font-semibold mb-2 text-black dark:text-white">{{ $parking->name }} ({{ $parking->occupancy_percentage }}% full)</h2><p class="text-lg text-black dark:text-white">{{ $parking->address }}</p><p class="text-lg text-black dark:text-white">Available Spots: {{ $parking->capacity - $parking->occupied }}/{{ $parking->capacity }}</p></a>')
-                    .bindPopup('{{ $parking->name }}')
+                    .bindPopup('<a href="{{ route("parking", $parking->id) }}" class="no-underline"><h2 class="text-2xl font-semibold mb-2 text-dark">{{ $parking->name }} ({{ floor($parking->occupied_percentage) }}% full)</h2><p class="text-lg text-dark">{{ $parking->address }}</p><p class="text-lg text-dark">Available Spots: {{ $parking->capacity - $parking->occupied }}/{{ $parking->capacity }}</p></a>')
+                    // .bindPopup('{{ $parking->name }}')
                     .openPopup();
                 @endforeach
 
+            </script>
+
+<!-- create a heat map layer -->
+            <script>
+                var heatData = [
+                    @foreach($parkings as $parking)
+                    [{{ $parking->lat }}, {{ $parking->lng }}, {{ $parking->occupied_percentage }}],
+                    @endforeach
+                ];
+                var heat = L.heatLayer(heatData, {
+                    radius: 70,
+                    blur: 45,
+                    maxZoom: 22,
+                }).addTo(map);
             </script>
 
         </div>
